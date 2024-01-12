@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOS 17.0, *)
 final class MessageBar: NSObject {
   static let shared = MessageBar()
   
@@ -23,16 +24,20 @@ final class MessageBar: NSObject {
   
   private var messageView: DynamicIslandMessageBarSmall!
   
-  final func toast(_ alertType: DynamicIslandToast.AlertType, message: String) {
+  final func toast(_ alertType: DynamicIslandToast.AlertType,
+                   message: String,
+                   style: DynamicIslandMessageBarStyle) {
     let hasDynamicIsland: Bool = UIDevice.current.hasDynamicIsland
     if hasDynamicIsland {
-      toastWithDynamicIsland(for: alertType, message: message)
+      toastWithDynamicIsland(for: alertType, message: message, style: style)
     }
   }
   
   // MARK: - DynamicIsland Message
   
-  private func toastWithDynamicIsland(for alertType: DynamicIslandToast.AlertType, message: String) {
+  private func toastWithDynamicIsland(for alertType: DynamicIslandToast.AlertType,
+                                      message: String,
+                                      style: DynamicIslandMessageBarStyle) {
     topViewController()?.statusBarHidden = true
     
     let width: CGFloat = 126
@@ -53,28 +58,25 @@ final class MessageBar: NSObject {
     
     // Instantiate and bind data
     messageView = .init(frame: frame)
-    messageView.setTitle(alertType.title.orEmpty, message: message)
+    messageView.setTitle(alertType.title.orEmpty, message: message, style: style)
     messageView.layer.zPosition = 1000
-    
-    if #available(iOS 13.0, *) {
-      messageView.layer.cornerCurve = .continuous
-    }
+    messageView.layer.cornerCurve = .continuous
     messageView.layer.cornerRadius = 37/2
     window.addSubview(messageView)
     
     // Use sample label to calculate height of message as we support multiple line
-    let inset: CGFloat = 12
-    let messageOriginX: CGFloat = 50 + 28 - inset*2
-    let maxWidth: CGFloat = window.bounds.width - 11*2
-    let label = UILabel(frame: CGRect(x: 11, y: 0, width: maxWidth - 11*2 - messageOriginX, height: 0))
-    label.font = UIFont.callout()
-    label.textAlignment = .left
-    label.numberOfLines = 0
-    label.text = message
-    label.sizeToFit()
-    
-    var maxHeight: CGFloat = 28 + UIFont.body(.medium).lineHeight + 11/2 + label.frame.height + 28
-    maxHeight = 83//max(maxHeight, 100) //200 //83
+//    let inset: CGFloat = 12
+//    let messageOriginX: CGFloat = 50 + 28 - inset*2
+//    let maxWidth: CGFloat = window.bounds.width - 11*2
+//    let label = UILabel(frame: CGRect(x: 11, y: 0, width: maxWidth - 11*2 - messageOriginX, height: 0))
+//    label.font = UIFont.callout()
+//    label.textAlignment = .left
+//    label.numberOfLines = 0
+//    label.text = message
+//    label.sizeToFit()
+//    
+//    var maxHeight: CGFloat = 28 + UIFont.body(.medium).lineHeight + 11/2 + label.frame.height + 28
+    let maxHeight: CGFloat = 83//max(maxHeight, 100) //200 //83
     
     let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.75) { [self] in
       messageView.setAlphaForSubviews(to: 1.0)

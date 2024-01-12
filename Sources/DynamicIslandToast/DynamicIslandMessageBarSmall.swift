@@ -7,6 +7,14 @@
 
 import UIKit
 
+@available(iOS 17.0, *)
+public enum DynamicIslandMessageBarStyle {
+  case `default`
+  case leadingIcon(UIImage?)
+  case animate(sourceSFSymbolImage: UIImage?, targetSFSymbolImage: UIImage?)
+}
+
+@available(iOS 17.0, *)
 public final class DynamicIslandMessageBarSmall: UIView {
   
   // MARK: - Properties
@@ -69,7 +77,7 @@ public final class DynamicIslandMessageBarSmall: UIView {
     super.layoutSubviews()
     
     iconView.layer.cornerRadius = iconView.bounds.height / 2.0
-    if #available(iOS 16.0, *), traitCollection.userInterfaceStyle == .dark {
+    if traitCollection.userInterfaceStyle == .dark {
       externalBorderView.frame = isBeingRemoved ? bounds.insetBy(dx: 1, dy: 1) : bounds.insetBy(dx: -externalBorderWidth, dy: -externalBorderWidth)
       externalBorderView.layer.cornerRadius = externalBorderView.bounds.height / 2.0
     }
@@ -84,9 +92,25 @@ public final class DynamicIslandMessageBarSmall: UIView {
     messageLabel.alpha = alpha
   }
   
-  public final func setTitle(_ title: String, message: String) {
+  public final func setTitle(_ title: String, message: String, style: DynamicIslandMessageBarStyle = .default) {
     titleLabel.text = title
     messageLabel.text = message
+    
+    switch style {
+    case .default:
+      break
+      
+    case .leadingIcon(let image): 
+      iconView.image = image
+      
+    case .animate(let sourceSFSymbol, let targetSFSymbol):
+      iconView.image = sourceSFSymbol
+      if let targetSFSymbol {
+        MainThread.delay(after: .now() + .milliseconds(300)) { [self] in
+          iconView.setSymbolImage(targetSFSymbol, contentTransition: .replace, options: .default, completion: nil)
+        }
+      }
+    }
     
     MainThread.delay(after: .now() + .seconds(1)) { [weak self] in
       guard let self else { return }

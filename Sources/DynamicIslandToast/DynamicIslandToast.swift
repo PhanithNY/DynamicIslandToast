@@ -1,5 +1,6 @@
 import UIKit
 
+@available(iOS 17.0, *)
 public enum DynamicIslandToast {
   
   public enum Configuration {
@@ -28,7 +29,7 @@ public enum DynamicIslandToast {
     }
   }
   
-  public static func show(_ type: AlertType, message: String) {
+  public static func show(_ type: AlertType, message: String, style: DynamicIslandMessageBarStyle) {
     MainThread.run {
       switch type {
       case .error:
@@ -41,7 +42,7 @@ public enum DynamicIslandToast {
         Haptic.notification(.warning).generate()
       }
       
-      MessageBar.shared.toast(type, message: message)
+      MessageBar.shared.toast(type, message: message, style: style)
     }
   }
 }
