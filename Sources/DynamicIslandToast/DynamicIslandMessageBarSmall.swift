@@ -11,7 +11,7 @@ import UIKit
 public enum DynamicIslandMessageBarStyle {
   case `default`
   case leadingIcon(UIImage?)
-  case animate(sourceSFSymbolImage: UIImage?, targetSFSymbolImage: UIImage?)
+  case animate(sourceSFSymbolImage: UIImage?, targetSFSymbolImage: UIImage?, tintColor: UIColor?)
 }
 
 @available(iOS 17.0, *)
@@ -103,7 +103,8 @@ public final class DynamicIslandMessageBarSmall: UIView {
     case .leadingIcon(let image): 
       iconView.image = image
       
-    case .animate(let sourceSFSymbol, let targetSFSymbol):
+    case .animate(let sourceSFSymbol, let targetSFSymbol, let tintColor):
+      iconView.tintColor = tintColor
       iconView.image = sourceSFSymbol
       if let targetSFSymbol {
         MainThread.delay(after: .now() + .milliseconds(300)) { [self] in

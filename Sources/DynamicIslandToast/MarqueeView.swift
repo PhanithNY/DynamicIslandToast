@@ -7,6 +7,12 @@
 
 import UIKit
 
+public enum MarqueeType {
+  case left
+  case right
+  case reverse
+}
+
 public final class MarqueeView: UIView {
   
   public var contentViewFrameConfigWhenCantMarquee: ((UIView)->())?
@@ -17,8 +23,13 @@ public final class MarqueeView: UIView {
   /// The margin between marquee view
   public var contentMargin: CGFloat = 8
   
+  /// Type of marquee. Default is left.
+  public var marqueeType: MarqueeType = .left
+  
   /// Framerate for the animation.
   public var preferredFramesPerSecond: Int = 0
+  
+  public var pointsPerFrame: CGFloat = 0.5
   
   /// The animation speed for marquee view
   public var speed: CGFloat = 1.0
@@ -33,6 +44,7 @@ public final class MarqueeView: UIView {
   private lazy var containerView = UIView()
   
   private var displayLink: CADisplayLink?
+  private var isReversing = false
   
   // MARK: - Init
   
@@ -75,6 +87,12 @@ public final class MarqueeView: UIView {
   public func startMarquee() {
     stopMarquee()
     
+    if marqueeType == .right {
+      var frame = containerView.frame
+      frame.origin.x = self.bounds.size.width - frame.size.width
+      containerView.frame = frame
+    }
+    
     displayLink = CADisplayLink(target: self, selector: #selector(processMarquee))
     if #available(iOS 15.0, *) {
       let frameRate = Float(preferredFramesPerSecond)
@@ -94,16 +112,61 @@ public final class MarqueeView: UIView {
   private func processMarquee() {
     var frame = self.containerView.frame
     
-    let targetX = -(self.contentView!.bounds.size.width + self.contentMargin)
-    if frame.origin.x <= targetX {
-      frame.origin.x = 0
-      self.containerView.frame = frame
-    }else {
-      frame.origin.x -= speed
-      if frame.origin.x < targetX {
-        frame.origin.x = targetX
+    switch marqueeType {
+    case .left:
+      let targetX = -(self.contentView!.bounds.size.width + self.contentMargin)
+      if frame.origin.x <= targetX {
+        frame.origin.x = 0
+        self.containerView.frame = frame
+      }else {
+        frame.origin.x -= pointsPerFrame
+        if frame.origin.x < targetX {
+          frame.origin.x = targetX
+        }
+        self.containerView.frame = frame
       }
-      self.containerView.frame = frame
+      
+    case .right:
+      let targetX = self.bounds.size.width - self.contentView!.bounds.size.width
+      if frame.origin.x >= targetX {
+        frame.origin.x = self.bounds.size.width - self.containerView.bounds.size.width
+        self.containerView.frame = frame
+      }else {
+        frame.origin.x += pointsPerFrame
+        if frame.origin.x > targetX {
+          frame.origin.x = targetX
+        }
+        self.containerView.frame = frame
+      }
+      
+    case .reverse:
+      if isReversing {
+        let targetX: CGFloat = 0
+        if frame.origin.x > targetX {
+          frame.origin.x = 0
+          self.containerView.frame = frame
+          isReversing = false
+        }else {
+          frame.origin.x += pointsPerFrame
+          if frame.origin.x > 0 {
+            frame.origin.x = 0
+            isReversing = false
+          }
+          self.containerView.frame = frame
+        }
+      } else {
+        let targetX = self.bounds.size.width - self.containerView.bounds.size.width
+        if frame.origin.x <= targetX {
+          isReversing = true
+        }else {
+          frame.origin.x -= pointsPerFrame
+          if frame.origin.x < targetX {
+            frame.origin.x = targetX
+            isReversing = true
+          }
+          self.containerView.frame = frame
+        }
+      }
     }
   }
   
@@ -129,29 +192,20 @@ public final class MarqueeView: UIView {
     validContentView.sizeToFit()
     containerView.addSubview(validContentView)
     
-    containerView.frame = CGRect(
-      x: 0,
-      y: 0,
-      width: validContentView.bounds.size.width*2 + contentMargin,
-      height: self.bounds.size.height
-    )
+    if marqueeType == .reverse {
+      containerView.frame = CGRect(x: 0, y: 0, width: validContentView.bounds.size.width, height: self.bounds.size.height)
+    }else {
+      containerView.frame = CGRect(x: 0, y: 0, width: validContentView.bounds.size.width*2 + contentMargin, height: self.bounds.size.height)
+    }
     
     if validContentView.bounds.size.width > self.bounds.size.width {
-      validContentView.frame = CGRect(
-        x: 0,
-        y: 0,
-        width: validContentView.bounds.size.width,
-        height: self.bounds.size.height
-      )
+      validContentView.frame = CGRect(x: 0, y: 0, width: validContentView.bounds.size.width, height: self.bounds.size.height)
       
-      let otherContentView = validContentView.copyMarqueeView()
-      otherContentView.frame = CGRect(
-        x: validContentView.bounds.size.width + contentMargin,
-        y: 0,
-        width: validContentView.bounds.size.width,
-        height: self.bounds.size.height
-      )
-      containerView.addSubview(otherContentView)
+      if marqueeType != .reverse {
+        let otherContentView = validContentView.copyMarqueeView()
+        otherContentView.frame = CGRect(x: validContentView.bounds.size.width + contentMargin, y: 0, width: validContentView.bounds.size.width, height: self.bounds.size.height)
+        containerView.addSubview(otherContentView)
+      }
       
       if self.bounds.size.width != 0, autoScroll {
         self.startMarquee()
@@ -160,12 +214,7 @@ public final class MarqueeView: UIView {
       if contentViewFrameConfigWhenCantMarquee != nil {
         contentViewFrameConfigWhenCantMarquee?(validContentView)
       } else {
-        validContentView.frame = CGRect(
-          x: 0,
-          y: 0,
-          width: validContentView.bounds.size.width,
-          height: self.bounds.size.height
-        )
+        validContentView.frame = CGRect(x: 0, y: 0, width: validContentView.bounds.size.width, height: self.bounds.size.height)
       }
     }
   }
