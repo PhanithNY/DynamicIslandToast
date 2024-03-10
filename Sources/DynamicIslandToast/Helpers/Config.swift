@@ -18,12 +18,12 @@ extension Config where Self: NSObject {
   ///       $0.textColor = .black
   ///       $0.text = "Hi There!"
   ///     }
-  public func decorate(_ closure: (Self) -> Void) -> Self {
+  func decorate(_ closure: (Self) -> Void) -> Self {
     closure(self)
     return self
   }
   
-  public func config(_ closure: (Self) -> Void) -> Self {
+  func config(_ closure: (Self) -> Void) -> Self {
     closure(self)
     return self
   }
