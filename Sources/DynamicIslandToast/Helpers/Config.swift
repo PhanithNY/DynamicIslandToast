@@ -7,10 +7,10 @@
 
 import UIKit
 
-protocol Config { }
-extension NSObject: Config { }
+protocol Builder { }
+extension NSObject: Builder { }
 
-extension Config where Self: NSObject {
+extension Builder where Self: NSObject {
   /// Makes it available to set properties with closures just after initializing.
   ///
   ///     let label = UILabel().config {
