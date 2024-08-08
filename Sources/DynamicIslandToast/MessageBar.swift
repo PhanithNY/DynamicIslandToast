@@ -78,18 +78,7 @@ final class MessageBar: NSObject {
 //    var maxHeight: CGFloat = 28 + UIFont.body(.medium).lineHeight + 11/2 + label.frame.height + 28
     let maxHeight: CGFloat = 83//max(maxHeight, 100) //200 //83
     
-//    let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.75) { [self] in
-//      messageView.setAlphaForSubviews(to: 1.0)
-//      messageView.frame.origin.x = y
-//      messageView.frame.size.width = window.bounds.width - 11*2
-//      messageView.frame.size.height = maxHeight
-//      messageView.layer.cornerRadius = 83/2//max(83/2, 37)
-//      messageView.layoutIfNeeded()
-//    }
-//    
-//    animator.startAnimation()
-    
-    UIView.animate { [self] in
+    let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.75) { [self] in
       messageView.setAlphaForSubviews(to: 1.0)
       messageView.frame.origin.x = y
       messageView.frame.size.width = window.bounds.width - 11*2
@@ -97,6 +86,8 @@ final class MessageBar: NSObject {
       messageView.layer.cornerRadius = 83/2//max(83/2, 37)
       messageView.layoutIfNeeded()
     }
+    
+    animator.startAnimation()
     perform(#selector(removeToast), with: nil, afterDelay: durationForDelay)
   }
   
