@@ -5,6 +5,7 @@
 //  Created by Suykorng on 26/11/23.
 //
 
+import DeviceKit
 import UIKit
 
 @available(iOS 17.0, *)
@@ -40,16 +41,31 @@ final class MessageBar: NSObject {
                                       style: DynamicIslandMessageBarStyle) {
     topViewController()?.statusBarHidden = true
     
-    let width: CGFloat = 126
+    let islandWidth: CGFloat = 126
+    let islandHeight: CGFloat = 37
     let x: CGFloat = window.bounds.width/2 - 126/2
-    let y: CGFloat = 11
-    let height: CGFloat = 37
-    let frame = CGRect(x: x, y: y, width: width, height: height)
+    var originY: CGFloat = 11
+    
+    let device = Device.current
+    switch device {
+    case .simulator(.iPhone16ProMax),
+        .simulator(.iPhone16Pro):
+      originY = 14
+      
+    case .iPhone16ProMax,
+        .iPhone16Pro:
+      originY = 14
+      
+    default:
+      break
+    }
+    
+    let frame = CGRect(x: x, y: originY, width: islandWidth, height: islandHeight)
     
     // Check if toast already display, and not yet removed.
     // If not yet remove, just set new contents and perform remove again
     if let messageView = window.subviews.first(where: { type(of: $0) == DynamicIslandMessageBarSmall.self }) as? DynamicIslandMessageBarSmall,
-       messageView.frame.origin.x <= y {
+       messageView.frame.origin.x <= originY {
       messageView.setTitle(alertType.title.orEmpty, message: message)
       NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(removeToast), object: nil)
       perform(#selector(removeToast), with: nil, afterDelay: durationForDelay)
@@ -60,8 +76,8 @@ final class MessageBar: NSObject {
     messageView = .init(frame: frame)
     messageView.setTitle(alertType.title.orEmpty, message: message, style: style)
     messageView.layer.zPosition = 1000
-    messageView.layer.cornerCurve = .continuous
-    messageView.layer.cornerRadius = 37/2
+//    messageView.layer.cornerCurve = .continuous
+    messageView.layer.cornerRadius = islandHeight/2
     window.addSubview(messageView)
     
     // Use sample label to calculate height of message as we support multiple line
@@ -76,14 +92,17 @@ final class MessageBar: NSObject {
 //    label.sizeToFit()
 //    
 //    var maxHeight: CGFloat = 28 + UIFont.body(.medium).lineHeight + 11/2 + label.frame.height + 28
-    let maxHeight: CGFloat = 83//max(maxHeight, 100) //200 //83
+    
+    // We assume to use circle, so the maximum height will be radius*2
+    let radius: CGFloat = _CornerRadiusProvider.notchCornerRadius - originY
+    let maxHeight: CGFloat = radius * 2//83
     
     let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.75) { [self] in
       messageView.setAlphaForSubviews(to: 1.0)
-      messageView.frame.origin.x = y
-      messageView.frame.size.width = window.bounds.width - 11*2
+      messageView.frame.origin.x = originY
+      messageView.frame.size.width = window.bounds.width - originY*2
       messageView.frame.size.height = maxHeight
-      messageView.layer.cornerRadius = 83/2//max(83/2, 37)
+      messageView.layer.cornerRadius = radius//83/2
       messageView.layoutIfNeeded()
     }
     
@@ -97,5 +116,28 @@ final class MessageBar: NSObject {
     MainThread.delay(after: .now() + .milliseconds(250)) {
       topViewController()?.statusBarHidden = false
     }
+  }
+}
+
+fileprivate enum _CornerRadiusProvider {
+  static var notchCornerRadius: CGFloat {
+    UIScreen.main.displayCornerRadius
+  }
+}
+
+extension UIScreen {
+  fileprivate static let cornerRadiusKey: String = {
+    let components = ["Radius", "Corner", "display", "_"]
+    return components.reversed().joined()
+  }()
+  
+  /// The corner radius of the display. Uses a private property of `UIScreen`,
+  /// and may report 0 if the API changes.
+  fileprivate var displayCornerRadius: CGFloat {
+    guard let cornerRadius = self.value(forKey: Self.cornerRadiusKey) as? CGFloat else {
+      return 0.0
+    }
+    
+    return max(0, cornerRadius)
   }
 }

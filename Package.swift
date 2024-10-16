@@ -11,11 +11,15 @@ let package = Package(
             name: "DynamicIslandToast",
             targets: ["DynamicIslandToast"]),
     ],
+    dependencies: [
+      .package(url: "https://github.com/devicekit/DeviceKit.git", from: "5.5.0")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "DynamicIslandToast"),
+            name: "DynamicIslandToast",
+            dependencies: ["DeviceKit"]),
         .testTarget(
             name: "DynamicIslandToastTests",
             dependencies: ["DynamicIslandToast"]),
