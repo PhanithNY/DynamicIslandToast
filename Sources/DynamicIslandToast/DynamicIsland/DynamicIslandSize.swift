@@ -9,7 +9,7 @@ import DeviceKit
 import UIKit
 
 @available(iOS 17.0, *)
-enum DynamicIslandSize {
+public enum DynamicIslandSize {
   
   static let delegate = DynamicIslandTransitioningDelegate()
   
@@ -21,7 +21,7 @@ enum DynamicIslandSize {
     }
   }
   
-  static var originY: CGFloat = {
+  public static var originY: CGFloat = {
     var originY: CGFloat = 11
     
     let device = Device.current
@@ -41,7 +41,7 @@ enum DynamicIslandSize {
     return originY
   }()
   
-  static var startFrame: CGRect = {
+  public static var startFrame: CGRect = {
     let islandWidth: CGFloat = 126
     let islandHeight: CGFloat = 37
     let x: CGFloat = min(window.bounds.width, window.bounds.height)/2 - 126/2
@@ -50,7 +50,7 @@ enum DynamicIslandSize {
     return startFrame
   }()
   
-  static var radius: CGFloat = {
+  public static var radius: CGFloat = {
     _CornerRadiusProvider.notchCornerRadius - originY
   }()
     

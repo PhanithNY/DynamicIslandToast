@@ -13,7 +13,7 @@ public extension UIDevice {
   var hasDynamicIsland: Bool {
     // Dynamic Island only available from iPhone 14 Pro/Pro max
     // from iOS 16 and up
-    guard #available(iOS 16.0, *) else {
+    guard #available(iOS 17.0, *) else {
       return false
     }
     

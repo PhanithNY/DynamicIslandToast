@@ -35,15 +35,7 @@ public final class DynamicIslandMessageView: UIView {
     $0.font = UIFont.callout(.medium)
     $0.textAlignment = .left
     $0.textColor = .white
-    $0.numberOfLines = 0
-  }
-  
-  private lazy var externalBorderView = UIView().config {
-    $0.layer.borderColor = UIColor(dynamicProvider: { trait in
-      return trait.userInterfaceStyle == .dark ? .separator : .clear
-    }).cgColor
-    $0.layer.cornerCurve = .continuous
-    $0.layer.borderWidth = externalBorderWidth
+    $0.numberOfLines = 2
   }
   
   // MARK: - Init
@@ -63,16 +55,11 @@ public final class DynamicIslandMessageView: UIView {
     
     iconContainerView.layer.cornerRadius = iconContainerView.bounds.height / 2.0
     iconView.layer.cornerRadius = iconView.bounds.height / 2.0
-    if traitCollection.userInterfaceStyle == .dark {
-      externalBorderView.frame = bounds.insetBy(dx: -externalBorderWidth, dy: -externalBorderWidth)
-      externalBorderView.layer.cornerRadius = externalBorderView.bounds.height / 2.0
-    }
   }
   
   // MARK: - Actions
   
   public final func setAlphaForSubviews(to alpha: CGFloat) {
-    externalBorderView.alpha = alpha
     titleLabel.alpha = alpha
     iconContainerView.alpha = alpha
     iconView.alpha = alpha
@@ -85,6 +72,7 @@ public final class DynamicIslandMessageView: UIView {
     let attributedText = NSMutableAttributedString(string: message, attributes: [.font: UIFont.callout(.medium), .foregroundColor: UIColor.white])
     let paragraphStyle = NSMutableParagraphStyle()
     paragraphStyle.lineSpacing = 2
+    paragraphStyle.lineBreakMode = .byTruncatingTail
     attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
     messageLabel.attributedText = attributedText
     
@@ -117,9 +105,8 @@ public final class DynamicIslandMessageView: UIView {
   // MARK: - Prepare layouts
   
   private func prepareLayouts() {
-    addSubview(externalBorderView)
-    
-    let inset: CGFloat = DynamicIslandSize.originY
+    backgroundColor = .clear
+    let inset: CGFloat = 18//DynamicIslandSize.originY
     let size: CGFloat = (DynamicIslandSize.radius - inset) * 2
     
     // Icon Container
@@ -148,10 +135,10 @@ public final class DynamicIslandMessageView: UIView {
     titleLabel.translatesAutoresizingMaskIntoConstraints = false
     addSubview(titleLabel)
     titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: inset-4).isActive = true
-    titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset).isActive = true
+    titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -DynamicIslandSize.originY).isActive = true
     titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: titleLabel.font.lineHeight+3).isActive = true
     
-    let titleLabelTopConstraint: NSLayoutConstraint = titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 37)
+    let titleLabelTopConstraint: NSLayoutConstraint = titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 32)//37)
     titleLabelTopConstraint.priority = .required
     titleLabelTopConstraint.isActive = true
     
@@ -163,7 +150,7 @@ public final class DynamicIslandMessageView: UIView {
     messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset).isActive = true
     messageLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: messageLabel.font.lineHeight+3).isActive = true
     
-    let bottomConstraint: NSLayoutConstraint = messageLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -inset)
+    let bottomConstraint: NSLayoutConstraint = messageLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -DynamicIslandSize.originY)
     bottomConstraint.priority = .defaultHigh
     bottomConstraint.isActive = true
     
