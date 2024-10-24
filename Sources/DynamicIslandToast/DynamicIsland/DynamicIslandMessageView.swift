@@ -35,7 +35,7 @@ public final class DynamicIslandMessageView: UIView {
     $0.font = UIFont.callout(.medium)
     $0.textAlignment = .left
     $0.textColor = .white
-    $0.numberOfLines = 2
+    $0.numberOfLines = 3
   }
   
   // MARK: - Init
