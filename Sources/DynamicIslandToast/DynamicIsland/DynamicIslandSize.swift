@@ -28,11 +28,11 @@ public enum DynamicIslandSize {
     switch device {
     case .simulator(.iPhone16ProMax),
         .simulator(.iPhone16Pro):
-      originY = 14
+      originY = 13.5
       
     case .iPhone16ProMax,
         .iPhone16Pro:
-      originY = 14
+      originY = 13.5
       
     default:
       break
