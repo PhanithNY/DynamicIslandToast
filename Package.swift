@@ -12,7 +12,7 @@ let package = Package(
             targets: ["DynamicIslandToast"]),
     ],
     dependencies: [
-      .package(url: "https://github.com/devicekit/DeviceKit.git", from: "5.5.0")
+      .package(url: "https://github.com/devicekit/DeviceKit.git", exact: Version(5,5,0))
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
