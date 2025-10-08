@@ -35,7 +35,10 @@ public enum DynamicIslandSize {
       originY = 13.5
       
     default:
-      break
+      // This is iPhone Air, hopefully.
+      if window.safeAreaInsets.top == 68 && window.bounds.width * window.bounds.height == 420*912 {
+        originY = 20
+      }
     }
     
     return originY
