@@ -13,6 +13,8 @@ public final class DynamicIslandMessageView: UIView {
   // MARK: - Properties
   
   private let externalBorderWidth: CGFloat = 0.66
+  private let titleFont = UIFont.systemFont(ofSize: 13, weight: .regular)
+  private let messageFont = UIFont.systemFont(ofSize: 16, weight: .medium)
   
   private lazy var iconContainerView = UIView().config {
     $0.backgroundColor = .clear
@@ -26,16 +28,18 @@ public final class DynamicIslandMessageView: UIView {
   }
   
   private lazy var titleLabel = UILabel().config {
-    $0.font = UIFont.footnote(.regular)
+    $0.font = titleFont
     $0.textAlignment = .left
     $0.textColor = .white.withAlphaComponent(0.75)
+    $0.adjustsFontForContentSizeCategory = false
   }
   
   private lazy var messageLabel = UILabel().config {
-    $0.font = UIFont.callout(.medium)
+    $0.font = messageFont
     $0.textAlignment = .left
     $0.textColor = .white
     $0.numberOfLines = 3
+    $0.adjustsFontForContentSizeCategory = false
   }
   
   // MARK: - Init
@@ -69,7 +73,7 @@ public final class DynamicIslandMessageView: UIView {
   public final func setTitle(_ title: String, message: String, style: DynamicIslandMessageStyle = .default) {
     titleLabel.text = title
     
-    let attributedText = NSMutableAttributedString(string: message, attributes: [.font: UIFont.callout(.medium), .foregroundColor: UIColor.white])
+    let attributedText = NSMutableAttributedString(string: message, attributes: [.font: messageFont, .foregroundColor: UIColor.white])
     let paragraphStyle = NSMutableParagraphStyle()
     paragraphStyle.lineSpacing = 2
     paragraphStyle.lineBreakMode = .byTruncatingTail
