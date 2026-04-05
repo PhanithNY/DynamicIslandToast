@@ -13,8 +13,12 @@ public final class DynamicIslandMessageView: UIView {
   // MARK: - Properties
   
   private let externalBorderWidth: CGFloat = 0.66
-  private let titleFont = UIFont.systemFont(ofSize: 13, weight: .regular)
-  private let messageFont = UIFont.systemFont(ofSize: 16, weight: .medium)
+  private let defaultTitleFont = UIFont.systemFont(ofSize: 13, weight: .regular)
+  private let defaultMessageFont = UIFont.systemFont(ofSize: 16, weight: .medium)
+  private var titleFont: UIFont
+  private var messageFont: UIFont
+  private var titleLabelHeightConstraint: NSLayoutConstraint?
+  private var messageLabelHeightConstraint: NSLayoutConstraint?
   
   private lazy var iconContainerView = UIView().config {
     $0.backgroundColor = .clear
@@ -45,6 +49,8 @@ public final class DynamicIslandMessageView: UIView {
   // MARK: - Init
   
   override init(frame: CGRect) {
+    titleFont = defaultTitleFont
+    messageFont = defaultMessageFont
     super.init(frame: frame)
     
     prepareLayouts()
@@ -69,16 +75,27 @@ public final class DynamicIslandMessageView: UIView {
     iconView.alpha = alpha
     messageLabel.alpha = alpha
   }
+
+  public final func setFonts(title titleFont: UIFont? = nil, message messageFont: UIFont? = nil) {
+    self.titleFont = titleFont ?? defaultTitleFont
+    self.messageFont = messageFont ?? defaultMessageFont
+
+    titleLabel.font = self.titleFont
+    messageLabel.font = self.messageFont
+    titleLabelHeightConstraint?.constant = self.titleFont.lineHeight + 3
+    messageLabelHeightConstraint?.constant = self.messageFont.lineHeight + 3
+
+    if let message = messageLabel.attributedText?.string {
+      applyMessageText(message)
+    }
+
+    invalidateIntrinsicContentSize()
+    setNeedsLayout()
+  }
   
   public final func setTitle(_ title: String, message: String, style: DynamicIslandMessageStyle = .default) {
     titleLabel.text = title
-    
-    let attributedText = NSMutableAttributedString(string: message, attributes: [.font: messageFont, .foregroundColor: UIColor.white])
-    let paragraphStyle = NSMutableParagraphStyle()
-    paragraphStyle.lineSpacing = 2
-    paragraphStyle.lineBreakMode = .byTruncatingTail
-    attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
-    messageLabel.attributedText = attributedText
+    applyMessageText(message)
     
     switch style {
     case .default:
@@ -140,7 +157,8 @@ public final class DynamicIslandMessageView: UIView {
     addSubview(titleLabel)
     titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: inset-4).isActive = true
     titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -DynamicIslandSize.originY).isActive = true
-    titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: titleLabel.font.lineHeight+3).isActive = true
+    titleLabelHeightConstraint = titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: titleLabel.font.lineHeight + 3)
+    titleLabelHeightConstraint?.isActive = true
     
     let titleLabelTopConstraint: NSLayoutConstraint = titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 32)//37)
     titleLabelTopConstraint.priority = .required
@@ -152,12 +170,25 @@ public final class DynamicIslandMessageView: UIView {
     messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0).isActive = true
     messageLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: inset-4).isActive = true
     messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset).isActive = true
-    messageLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: messageLabel.font.lineHeight+3).isActive = true
+    messageLabelHeightConstraint = messageLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: messageLabel.font.lineHeight + 3)
+    messageLabelHeightConstraint?.isActive = true
     
     let bottomConstraint: NSLayoutConstraint = messageLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -DynamicIslandSize.originY)
     bottomConstraint.priority = .defaultHigh
     bottomConstraint.isActive = true
     
     setAlphaForSubviews(to: 0.0)
+  }
+
+  private func applyMessageText(_ message: String) {
+    let attributedText = NSMutableAttributedString(
+      string: message,
+      attributes: [.font: messageFont, .foregroundColor: UIColor.white]
+    )
+    let paragraphStyle = NSMutableParagraphStyle()
+    paragraphStyle.lineSpacing = 2
+    paragraphStyle.lineBreakMode = .byTruncatingTail
+    attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
+    messageLabel.attributedText = attributedText
   }
 }
