@@ -43,6 +43,7 @@ public final class DynamicIslandMessageView: UIView {
     $0.textAlignment = .left
     $0.textColor = .white
     $0.numberOfLines = 3
+    $0.lineBreakMode = .byWordWrapping
     $0.adjustsFontForContentSizeCategory = false
   }
   
@@ -173,8 +174,8 @@ public final class DynamicIslandMessageView: UIView {
     messageLabelHeightConstraint = messageLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: messageLabel.font.lineHeight + 3)
     messageLabelHeightConstraint?.isActive = true
     
-    let bottomConstraint: NSLayoutConstraint = messageLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -DynamicIslandSize.originY)
-    bottomConstraint.priority = .defaultHigh
+    let bottomConstraint: NSLayoutConstraint = messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -DynamicIslandSize.originY)
+    bottomConstraint.priority = .required
     bottomConstraint.isActive = true
     
     setAlphaForSubviews(to: 0.0)
@@ -187,7 +188,7 @@ public final class DynamicIslandMessageView: UIView {
     )
     let paragraphStyle = NSMutableParagraphStyle()
     paragraphStyle.lineSpacing = 2
-    paragraphStyle.lineBreakMode = .byTruncatingTail
+    paragraphStyle.lineBreakMode = .byWordWrapping
     attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
     messageLabel.attributedText = attributedText
   }
