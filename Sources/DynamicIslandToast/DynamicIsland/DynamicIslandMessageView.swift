@@ -76,20 +76,20 @@ public final class DynamicIslandMessageView: UIView {
     iconView.alpha = alpha
     messageLabel.alpha = alpha
   }
-
+  
   public final func setFonts(title titleFont: UIFont? = nil, message messageFont: UIFont? = nil) {
     self.titleFont = titleFont ?? defaultTitleFont
     self.messageFont = messageFont ?? defaultMessageFont
-
+    
     titleLabel.font = self.titleFont
     messageLabel.font = self.messageFont
     titleLabelHeightConstraint?.constant = self.titleFont.lineHeight + 3
     messageLabelHeightConstraint?.constant = self.messageFont.lineHeight + 3
-
+    
     if let message = messageLabel.attributedText?.string {
       applyMessageText(message)
     }
-
+    
     invalidateIntrinsicContentSize()
     setNeedsLayout()
   }
@@ -180,7 +180,7 @@ public final class DynamicIslandMessageView: UIView {
     
     setAlphaForSubviews(to: 0.0)
   }
-
+  
   private func applyMessageText(_ message: String) {
     let attributedText = NSMutableAttributedString(
       string: message,
@@ -191,5 +191,23 @@ public final class DynamicIslandMessageView: UIView {
     paragraphStyle.lineBreakMode = .byWordWrapping
     attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
     messageLabel.attributedText = attributedText
+    setMessageLabelHeight(attributedText)
+  }
+  
+  private func setMessageLabelHeight(_ attributedString: NSAttributedString) {
+    let inset: CGFloat = 18
+    let size: CGFloat = (DynamicIslandSize.radius - inset) * 2
+    let screenWidth = UIApplication.shared.currentWindow?.bounds.width ?? 320
+    let labelWidth = screenWidth - size - inset - inset - inset - inset
+    messageLabelHeightConstraint?.constant = attributedString.getHeight(withConstrainedWidth: labelWidth)
+  }
+}
+
+fileprivate extension NSAttributedString {
+  func getHeight(withConstrainedWidth width: CGFloat) -> CGFloat {
+    let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+    let boundingBox = boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, context: nil)
+    
+    return ceil(boundingBox.height)
   }
 }
