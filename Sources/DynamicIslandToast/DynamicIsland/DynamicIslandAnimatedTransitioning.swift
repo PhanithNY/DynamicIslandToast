@@ -71,24 +71,10 @@ final class DynamicIslandAnimatedTransitioning: NSObject, UIViewControllerAnimat
   
   private func animateDismissal(using transitionContext: UIViewControllerContextTransitioning) {
     let presentedViewController = transitionContext.viewController(forKey: .from).unsafelyUnwrapped
-    let presentingViewController = transitionContext.viewController(forKey: .to).unsafelyUnwrapped
-  
-    let presentingFrame: CGRect = transitionContext.containerView.bounds
     let endFrame: CGRect = DynamicIslandSize.startFrame
     let duration = transitionDuration(using: transitionContext)
-//    let animator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.75) {
-//      presentingViewController.view.frame = presentingFrame
-//      presentedViewController.view.frame = endFrame
-//    }
-//    
-//    animator.addCompletion { _ in
-//      transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-//    }
-//    
-//    animator.startAnimation()
     
     UIView.animate(springDuration: duration) {
-      presentingViewController.view.frame = presentingFrame
       presentedViewController.view.frame = endFrame
     } completion: { _ in
       transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
