@@ -36,7 +36,7 @@ public enum DynamicIslandSize {
         .simulator(.iPhone18ProMax),
         .iPhone18Pro,
         .iPhone18ProMax:
-      originY = 20.0
+      originY = 16.0
       
     default:
       // This is iPhone Air, hopefully.
@@ -58,7 +58,7 @@ public enum DynamicIslandSize {
         .simulator(.iPhone18ProMax),
         .iPhone18Pro,
         .iPhone18ProMax:
-      islandWidth = 100
+      islandWidth = 126
       
     default:
       islandWidth = 126
