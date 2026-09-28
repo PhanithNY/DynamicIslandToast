@@ -27,12 +27,16 @@ public enum DynamicIslandSize {
     let device = Device.current
     switch device {
     case .simulator(.iPhone16ProMax),
-        .simulator(.iPhone16Pro):
-      originY = 13.5
-      
-    case .iPhone16ProMax,
+        .simulator(.iPhone16Pro),
+        .iPhone16ProMax,
         .iPhone16Pro:
       originY = 13.5
+      
+    case .simulator(.iPhone18Pro),
+        .simulator(.iPhone18ProMax),
+        .iPhone18Pro,
+        .iPhone18ProMax:
+      originY = 20.0
       
     default:
       // This is iPhone Air, hopefully.
@@ -45,8 +49,21 @@ public enum DynamicIslandSize {
   }()
   
   public static var startFrame: CGRect = {
-    let islandWidth: CGFloat = 126
+    let islandWidth: CGFloat
     let islandHeight: CGFloat = 37
+    
+    let device = Device.current
+    switch device {
+    case .simulator(.iPhone18Pro),
+        .simulator(.iPhone18ProMax),
+        .iPhone18Pro,
+        .iPhone18ProMax:
+      islandWidth = 100
+      
+    default:
+      islandWidth = 126
+    }
+    
     let x: CGFloat = min(window.bounds.width, window.bounds.height)/2 - 126/2
     
     let startFrame = CGRect(x: x, y: originY, width: islandWidth, height: islandHeight)
