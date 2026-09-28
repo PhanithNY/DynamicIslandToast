@@ -58,7 +58,7 @@ public enum DynamicIslandSize {
         .simulator(.iPhone18ProMax),
         .iPhone18Pro,
         .iPhone18ProMax:
-      islandWidth = 126
+      islandWidth = 124
       
     default:
       islandWidth = 126
