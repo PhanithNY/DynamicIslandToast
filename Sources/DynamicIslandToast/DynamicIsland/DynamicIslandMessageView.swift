@@ -42,7 +42,7 @@ public final class DynamicIslandMessageView: UIView {
     $0.font = messageFont
     $0.textAlignment = .left
     $0.textColor = .white
-    $0.numberOfLines = 3
+    $0.numberOfLines = 5
     $0.lineBreakMode = .byWordWrapping
     $0.adjustsFontForContentSizeCategory = false
   }
