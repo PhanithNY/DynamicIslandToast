@@ -10,8 +10,6 @@ import UIKit
 // View that supports forwarding hit test touches to the provided array of views
 final class DynamicIslandPassthroughView: UIView {
   
-  var onHitTest: ((UIView) -> Void)?
-  
   // Array of views that we want to forward touches to
   var touchForwardTargetViews = [UIView]()
   
@@ -31,7 +29,6 @@ final class DynamicIslandPassthroughView: UIView {
         // Verify that the target view can receive the touch
         if let hitTargetView = targetView.hitTest(convertedPoint, with: event) {
           // Forward the touch to the target view
-          onHitTest?(hitTargetView)
           return hitTargetView
         }
       }

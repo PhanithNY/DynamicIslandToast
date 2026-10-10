@@ -35,10 +35,36 @@ targets:
             UIWindowSceneSessionRoleApplication:
               - UISceneConfigurationName: Default Configuration
                 UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+  DynamicIslandToastTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - ../Tests/DynamicIslandToastTests
+      - path: ../Tests/DynamicIslandToastObjCTestSupport/DITThrowingCornerRadiusFixture.m
+    dependencies:
+      - package: DynamicIslandToast
+      - target: DynamicIslandToastExample
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dynamicislandtoast.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/DynamicIslandToastExample.app/DynamicIslandToastExample"
+        HEADER_SEARCH_PATHS:
+          - "$(inherited)"
+          - "$(SRCROOT)/../Tests/DynamicIslandToastObjCTestSupport/include"
+        OTHER_SWIFT_FLAGS:
+          - "$(inherited)"
+          - "-Xcc"
+          - "-fmodule-map-file=$(SRCROOT)/TestSupport.modulemap"
 schemes:
   DynamicIslandToastExample:
     build:
       targets:
         DynamicIslandToastExample: all
+        DynamicIslandToastTests: [test, analyze]
     run:
       config: Debug
+    test:
+      config: Debug
+      targets:
+        - DynamicIslandToastTests

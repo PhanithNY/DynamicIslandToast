@@ -21,6 +21,20 @@
                ReferencedContainer = "container:DynamicIslandToastExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D7ED4685BD08F9D69A4F48E2"
+               BuildableName = "DynamicIslandToastTests.xctest"
+               BlueprintName = "DynamicIslandToastTests"
+               ReferencedContainer = "container:DynamicIslandToastExample.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -39,7 +53,20 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D7ED4685BD08F9D69A4F48E2"
+               BuildableName = "DynamicIslandToastTests.xctest"
+               BlueprintName = "DynamicIslandToastTests"
+               ReferencedContainer = "container:DynamicIslandToastExample.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

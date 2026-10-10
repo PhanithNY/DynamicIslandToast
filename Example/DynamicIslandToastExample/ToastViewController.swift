@@ -5,9 +5,10 @@ import UIKit
 final class ToastViewController: UIViewController {
   private let messageView = DynamicIslandMessageView()
   private let example: ToastExample
+  var onDismiss: (() -> Void)?
 
   override var prefersStatusBarHidden: Bool { true }
-  override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation { .fade }
+  override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation { .none }
 
   init(example: ToastExample) {
     self.example = example
@@ -59,5 +60,13 @@ final class ToastViewController: UIViewController {
     transitionCoordinator?.animate(alongsideTransition: { [weak self] _ in
       self?.messageView.setAlphaForSubviews(to: 0)
     })
+  }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    if isBeingDismissed || presentingViewController == nil {
+      onDismiss?()
+      onDismiss = nil
+    }
   }
 }

@@ -6,20 +6,13 @@
 //
 
 import DeviceKit
+import DynamicIslandToastObjC
 import UIKit
 
 @available(iOS 17.0, *)
 public enum DynamicIslandSize {
   
   static let delegate = DynamicIslandTransitioningDelegate()
-  
-  static var window: UIWindow {
-    if let window = UIApplication.shared._currentWindow {
-      return window
-    } else {
-      return UIWindow(frame: UIScreen.main.bounds)
-    }
-  }
   
   public static var originY: CGFloat = {
     let originY: CGFloat
@@ -49,13 +42,28 @@ public enum DynamicIslandSize {
     return originY
   }()
   
-  public static var startFrame: CGRect = {
+  // Explicit overrides remain shared configuration; default geometry is
+  // calculated for the current presentation instead of cached from a window.
+  static var startFrameOverride: CGRect?
+  static var radiusOverride: CGFloat?
+  private static let islandHeight: CGFloat = 37
+
+  @available(*, deprecated, message: "Use startFrame(in:) with the presentation container's bounds")
+  public static var startFrame: CGRect {
+    get { startFrame(in: UIScreen.main.bounds) }
+    set { startFrameOverride = newValue }
+  }
+
+  public static func startFrame(in bounds: CGRect) -> CGRect {
+    if let startFrameOverride {
+      return startFrameOverride
+    }
+
     // The first dynamic island width is 20.76mm -> 126.0
     // iPhone 18 series dynamic island width is 13.49 mm
     let defaultIslandWidth: CGFloat = 126.0
     let islandWidth: CGFloat
-    let islandHeight: CGFloat = 37
-    
+
     let device = Device.current
     switch device {
     case .simulator(.iPhone18Pro),
@@ -67,49 +75,40 @@ public enum DynamicIslandSize {
     default:
       islandWidth = defaultIslandWidth
     }
-    
-    let originX: CGFloat = min(window.bounds.width, window.bounds.height)/2 - islandWidth/2
-    let startFrame = CGRect(x: originX, y: originY, width: islandWidth, height: islandHeight)
-    return startFrame
-  }()
-  
-  public static var radius: CGFloat = {
-    _CornerRadiusProvider.notchCornerRadius - originY
-  }()
-    
-}
 
-enum _CornerRadiusProvider {
-  fileprivate static var notchCornerRadius: CGFloat {
-    UIScreen.main._displayCornerRadius
+    return CGRect(
+      x: bounds.midX - islandWidth / 2,
+      y: bounds.minY + originY,
+      width: islandWidth,
+      height: islandHeight
+    )
   }
-}
 
-extension UIScreen {
-  fileprivate static let _cornerRadiusKey: String = {
-    let components = ["Radius", "Corner", "display", "_"]
-    return components.reversed().joined()
-  }()
-  
-  /// The corner radius of the display. Uses a private property of `UIScreen`,
-  /// and may report 0 if the API changes.
-  fileprivate var _displayCornerRadius: CGFloat {
-    guard let cornerRadius = self.value(forKey: Self._cornerRadiusKey) as? CGFloat else {
-      return 0.0
+  @available(*, deprecated, message: "Use radius(for:) with a view in the presenting window")
+  public static var radius: CGFloat {
+    get { radius(for: UIScreen.main) }
+    set { radiusOverride = newValue }
+  }
+
+  public static func radius(for view: UIView) -> CGFloat {
+    radius(for: view.window?.windowScene?.screen)
+  }
+
+  private static func radius(for screen: UIScreen?) -> CGFloat {
+    guard radiusOverride == nil, let screen else { return radius(forDisplayCornerRadius: nil) }
+    let displayCornerRadius = DITPrivateCornerRadiusReader.displayCornerRadius(for: screen)
+      .map { CGFloat(truncating: $0) }
+    return radius(forDisplayCornerRadius: displayCornerRadius)
+  }
+
+  static func radius(forDisplayCornerRadius displayCornerRadius: CGFloat?) -> CGFloat {
+    if let radiusOverride {
+      return radiusOverride.isFinite ? max(0, radiusOverride) : islandHeight
     }
-    
-    return max(0, cornerRadius)
-  }
-}
-
-
-extension UIApplication {
-  var _currentWindow: UIWindow? {
-    connectedScenes
-      .filter({$0.activationState == .foregroundActive})
-      .map({$0 as? UIWindowScene})
-      .compactMap({$0})
-      .first?.windows
-      .filter({$0.isKeyWindow}).first
+    guard let displayCornerRadius, displayCornerRadius.isFinite, displayCornerRadius >= 0 else {
+      // Detached views and failed reads share the existing provisional radius.
+      return islandHeight
+    }
+    return max(0, displayCornerRadius - originY)
   }
 }

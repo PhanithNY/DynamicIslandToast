@@ -1,0 +1,5 @@
+// The Xcode test bundle compiles this fixture; SwiftPM builds its own test module.
+module DynamicIslandToastObjCTestSupport {
+  header "../Tests/DynamicIslandToastObjCTestSupport/include/DITThrowingCornerRadiusFixture.h"
+  export *
+}

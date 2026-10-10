@@ -19,6 +19,13 @@ public final class DynamicIslandMessageView: UIView {
   private var messageFont: UIFont
   private var titleLabelHeightConstraint: NSLayoutConstraint?
   private var messageLabelHeightConstraint: NSLayoutConstraint?
+  private var isContentTransitionActive = false
+  private var contentAlphaBeforeTransition: CGFloat = 0
+  private var pendingIconEffect: (() -> Void)?
+  private var scheduledIconEffect: DispatchWorkItem?
+  private var iconConfiguration = UUID()
+  private var iconSizeConstraints: [NSLayoutConstraint] = []
+  private let iconInset: CGFloat = 18
   
   private lazy var iconContainerView = UIView().config {
     $0.backgroundColor = .clear
@@ -30,7 +37,7 @@ public final class DynamicIslandMessageView: UIView {
     $0.contentMode = .center
     $0.tintColor = .white
   }
-  
+
   private lazy var titleLabel = UILabel().config {
     $0.font = titleFont
     $0.textAlignment = .left
@@ -60,8 +67,18 @@ public final class DynamicIslandMessageView: UIView {
   required init?(coder: NSCoder) {
     fatalError()
   }
+
+  deinit {
+    scheduledIconEffect?.cancel()
+  }
   
+  public override func didMoveToWindow() {
+    super.didMoveToWindow()
+    updateIconGeometry()
+  }
+
   public override func layoutSubviews() {
+    updateIconGeometry()
     super.layoutSubviews()
     
     iconContainerView.layer.cornerRadius = iconContainerView.bounds.height / 2.0
@@ -69,14 +86,64 @@ public final class DynamicIslandMessageView: UIView {
   }
   
   // MARK: - Actions
+
+  var transitionIconView: UIImageView { iconView }
   
   public final func setAlphaForSubviews(to alpha: CGFloat) {
-    titleLabel.alpha = alpha
-    iconContainerView.alpha = alpha
-    iconView.alpha = alpha
-    messageLabel.alpha = alpha
+    // The transition renders fully visible content into its own surface and
+    // owns the fade. Existing hosts may continue requesting their text fade.
+    guard !isContentTransitionActive else { return }
+    applyContentAlpha(alpha)
   }
-  
+
+  func prepareContentTransition() {
+    guard !isContentTransitionActive else { return }
+    contentAlphaBeforeTransition = iconContainerView.alpha
+    isContentTransitionActive = true
+    UIView.performWithoutAnimation {
+      applyContentAlpha(1)
+    }
+  }
+
+  func finishContentTransition(isPresenting: Bool, isCancelled: Bool) {
+    guard isContentTransitionActive else { return }
+    isContentTransitionActive = false
+    applyContentAlpha(isCancelled ? contentAlphaBeforeTransition : (isPresenting ? 1 : 0))
+    let effect = pendingIconEffect
+    pendingIconEffect = nil
+    if isPresenting || isCancelled {
+      effect?()
+    }
+  }
+
+  private func applyContentAlpha(_ alpha: CGFloat) {
+    titleLabel.alpha = alpha
+    messageLabel.alpha = alpha
+    iconContainerView.alpha = alpha
+  }
+
+  private func performIconEffect(_ effect: @escaping () -> Void) {
+    if isContentTransitionActive {
+      pendingIconEffect = effect
+    } else {
+      effect()
+    }
+  }
+
+  private func scheduleIconEffect(_ effect: @escaping (DynamicIslandMessageView) -> Void) {
+    let configuration = iconConfiguration
+    let work = DispatchWorkItem { [weak self] in
+      guard let self, self.iconConfiguration == configuration else { return }
+      self.scheduledIconEffect = nil
+      self.performIconEffect { [weak self] in
+        guard let self, self.iconConfiguration == configuration else { return }
+        effect(self)
+      }
+    }
+    scheduledIconEffect = work
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: work)
+  }
+
   public final func setFonts(title titleFont: UIFont? = nil, message messageFont: UIFont? = nil) {
     self.titleFont = titleFont ?? defaultTitleFont
     self.messageFont = messageFont ?? defaultMessageFont
@@ -95,6 +162,15 @@ public final class DynamicIslandMessageView: UIView {
   }
   
   public final func setTitle(_ title: String, message: String, style: DynamicIslandMessageStyle = .default) {
+    scheduledIconEffect?.cancel()
+    scheduledIconEffect = nil
+    pendingIconEffect = nil
+    iconConfiguration = UUID()
+    iconView.removeAllSymbolEffects()
+    iconContainerView.backgroundColor = .clear
+    iconView.contentMode = .center
+    iconView.tintColor = .white
+    iconView.image = UIImage(systemName: "info")?.applyingSymbolConfiguration(.init(font: UIFont.systemFont(ofSize: 32, weight: .semibold)))
     titleLabel.text = title
     applyMessageText(message)
     
@@ -108,8 +184,8 @@ public final class DynamicIslandMessageView: UIView {
       iconView.tintColor = foregroundColor
       iconView.image = image
       if preferredBouncyEffect {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
-          self?.iconView.addSymbolEffect(.bounce)
+        scheduleIconEffect { view in
+          view.iconView.addSymbolEffect(.bounce)
         }
       }
       
@@ -117,8 +193,8 @@ public final class DynamicIslandMessageView: UIView {
       iconView.tintColor = tintColor
       iconView.image = sourceSFSymbol
       if let targetSFSymbol {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [self] in
-          iconView.setSymbolImage(targetSFSymbol, contentTransition: .replace, options: .default, completion: nil)
+        scheduleIconEffect { view in
+          view.iconView.setSymbolImage(targetSFSymbol, contentTransition: .replace, options: .default, completion: nil)
         }
       }
     }
@@ -128,8 +204,8 @@ public final class DynamicIslandMessageView: UIView {
   
   private func prepareLayouts() {
     backgroundColor = .clear
-    let inset: CGFloat = 18//DynamicIslandSize.originY
-    let size: CGFloat = (DynamicIslandSize.radius - inset) * 2
+    let inset = iconInset
+    let size = max(0, (DynamicIslandSize.radius(for: self) - inset) * 2)
     
     // Icon Container
     iconContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -144,15 +220,18 @@ public final class DynamicIslandMessageView: UIView {
     let iconContainerViewHeightConstraint = iconContainerView.heightAnchor.constraint(equalToConstant: size)
     iconContainerViewHeightConstraint.priority = .required
     iconContainerViewHeightConstraint.isActive = true
+    iconSizeConstraints = [iconContainerViewWidthConstraint, iconContainerViewHeightConstraint]
     
     // Icon View
     iconView.translatesAutoresizingMaskIntoConstraints = false
     iconContainerView.addSubview(iconView)
     iconView.centerXAnchor.constraint(equalTo: iconContainerView.centerXAnchor).isActive = true
     iconView.centerYAnchor.constraint(equalTo: iconContainerView.centerYAnchor).isActive = true
-    iconView.widthAnchor.constraint(equalToConstant: size).isActive = true
-    iconView.heightAnchor.constraint(equalToConstant: size).isActive = true
-    
+    let iconWidthConstraint = iconView.widthAnchor.constraint(equalToConstant: size)
+    let iconHeightConstraint = iconView.heightAnchor.constraint(equalToConstant: size)
+    NSLayoutConstraint.activate([iconWidthConstraint, iconHeightConstraint])
+    iconSizeConstraints.append(contentsOf: [iconWidthConstraint, iconHeightConstraint])
+
     // Title
     titleLabel.translatesAutoresizingMaskIntoConstraints = false
     addSubview(titleLabel)
@@ -175,10 +254,24 @@ public final class DynamicIslandMessageView: UIView {
     messageLabelHeightConstraint?.isActive = true
     
     let bottomConstraint: NSLayoutConstraint = messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -DynamicIslandSize.originY)
-    bottomConstraint.priority = .required
+    // Let bottom padding yield in a compact host while preserving the
+    // labels' size and order before the expanded content is measured.
+    // This still participates in fitting the expanded height (priority 50).
+    bottomConstraint.priority = UILayoutPriority(999)
     bottomConstraint.isActive = true
     
+    registerForTraitChanges([UITraitDisplayScale.self]) { (view: DynamicIslandMessageView, _) in
+      view.updateIconGeometry()
+    }
     setAlphaForSubviews(to: 0.0)
+  }
+
+  private func updateIconGeometry() {
+    let size = max(0, (DynamicIslandSize.radius(for: self) - iconInset) * 2)
+    guard iconSizeConstraints.contains(where: { $0.constant != size }) else { return }
+    iconSizeConstraints.forEach { $0.constant = size }
+    invalidateIntrinsicContentSize()
+    setNeedsLayout()
   }
   
   private func applyMessageText(_ message: String) {
@@ -191,23 +284,5 @@ public final class DynamicIslandMessageView: UIView {
     paragraphStyle.lineBreakMode = .byWordWrapping
     attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
     messageLabel.attributedText = attributedText
-    setMessageLabelHeight(attributedText)
-  }
-  
-  private func setMessageLabelHeight(_ attributedString: NSAttributedString) {
-    let inset: CGFloat = 18
-    let size: CGFloat = (DynamicIslandSize.radius - inset) * 2
-    let screenWidth = UIApplication.shared.currentWindow?.bounds.width ?? 320
-    let labelWidth = screenWidth - size - inset - inset - inset - inset
-    messageLabelHeightConstraint?.constant = attributedString.getHeight(withConstrainedWidth: labelWidth)
-  }
-}
-
-fileprivate extension NSAttributedString {
-  func getHeight(withConstrainedWidth width: CGFloat) -> CGFloat {
-    let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-    let boundingBox = boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, context: nil)
-    
-    return ceil(boundingBox.height)
   }
 }

@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0559B24026F12F03D552F21A /* DynamicIslandToast in Frameworks */ = {isa = PBXBuildFile; productRef = 3287B3C42CAA7EAE462F7C1A /* DynamicIslandToast */; };
 		3091AE87BCD32C94E61E786E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5989B6E87E0832B0A502F1A /* AppDelegate.swift */; };
+		3D4CE577A41A4FA6C7016674 /* DynamicIslandToastTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F59EBB803950DA0E22823FE /* DynamicIslandToastTests.swift */; };
+		4F2E8859D763305D93C0C5AD /* DITThrowingCornerRadiusFixture.m in Sources */ = {isa = PBXBuildFile; fileRef = 0246D40ADAC6F027D19B315F /* DITThrowingCornerRadiusFixture.m */; };
 		600DA4ADE66FA637B2FCF643 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBC8AFD714974660205CA4C /* SceneDelegate.swift */; };
 		94EF41205C8096FAF6213470 /* DynamicIslandToast in Frameworks */ = {isa = PBXBuildFile; productRef = 34B53C72434455D81DB50C08 /* DynamicIslandToast */; };
 		C9057E230C6D0CF98E08F426 /* ToastExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA69F23661B8703FB5B1B82 /* ToastExample.swift */; };
@@ -15,8 +18,20 @@
 		F988B062FB076107D39BA19E /* ToastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F672CB746D55B7D4284673 /* ToastViewController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		BBF9238A2199B5FFCDFE8AAF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1B8AC9D42E064F8BFC0DF85C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1DC7BB0FCD07E5C1229AD283;
+			remoteInfo = DynamicIslandToastExample;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		0246D40ADAC6F027D19B315F /* DITThrowingCornerRadiusFixture.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DITThrowingCornerRadiusFixture.m; sourceTree = "<group>"; };
 		06F672CB746D55B7D4284673 /* ToastViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewController.swift; sourceTree = "<group>"; };
+		0F59EBB803950DA0E22823FE /* DynamicIslandToastTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicIslandToastTests.swift; sourceTree = "<group>"; };
 		233C249F35924D0416665C94 /* DynamicIslandToastExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DynamicIslandToastExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA69F23661B8703FB5B1B82 /* ToastExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastExample.swift; sourceTree = "<group>"; };
 		75CBC45F3A4D5B84DFEE728B /* DynamicIslandToast */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DynamicIslandToast; path = ..; sourceTree = SOURCE_ROOT; };
@@ -24,9 +39,18 @@
 		857ECEBFCD2E2D0B970DE4DE /* ExamplesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplesViewController.swift; sourceTree = "<group>"; };
 		9CBC8AFD714974660205CA4C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		D5989B6E87E0832B0A502F1A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D6E89E15680263DAF5399F8D /* DynamicIslandToastTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DynamicIslandToastTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		22F8AC70D5BE212AF22B5F3B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0559B24026F12F03D552F21A /* DynamicIslandToast in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6F368134ED7FF26B238F43CF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -55,8 +79,18 @@
 			isa = PBXGroup;
 			children = (
 				233C249F35924D0416665C94 /* DynamicIslandToastExample.app */,
+				D6E89E15680263DAF5399F8D /* DynamicIslandToastTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		537D3A954931EB72CA0AD745 /* DynamicIslandToastTests */ = {
+			isa = PBXGroup;
+			children = (
+				0F59EBB803950DA0E22823FE /* DynamicIslandToastTests.swift */,
+			);
+			name = DynamicIslandToastTests;
+			path = ../Tests/DynamicIslandToastTests;
 			sourceTree = "<group>";
 		};
 		AAA16B264BD416FCE3B63B5D /* Packages */ = {
@@ -71,9 +105,20 @@
 			isa = PBXGroup;
 			children = (
 				0C1FB5DD77CA1EDF96DF60B8 /* DynamicIslandToastExample */,
+				F9F773033A38DA0301267561 /* DynamicIslandToastObjCTestSupport */,
+				537D3A954931EB72CA0AD745 /* DynamicIslandToastTests */,
 				AAA16B264BD416FCE3B63B5D /* Packages */,
 				4050B21E9A67B435279F53C8 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		F9F773033A38DA0301267561 /* DynamicIslandToastObjCTestSupport */ = {
+			isa = PBXGroup;
+			children = (
+				0246D40ADAC6F027D19B315F /* DITThrowingCornerRadiusFixture.m */,
+			);
+			name = DynamicIslandToastObjCTestSupport;
+			path = ../Tests/DynamicIslandToastObjCTestSupport;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -97,6 +142,26 @@
 			productName = DynamicIslandToastExample;
 			productReference = 233C249F35924D0416665C94 /* DynamicIslandToastExample.app */;
 			productType = "com.apple.product-type.application";
+		};
+		D7ED4685BD08F9D69A4F48E2 /* DynamicIslandToastTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4FF327A6A3AD63B791798C54 /* Build configuration list for PBXNativeTarget "DynamicIslandToastTests" */;
+			buildPhases = (
+				AAE9717A5E95EA7EB58A8536 /* Sources */,
+				22F8AC70D5BE212AF22B5F3B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				25EE0A3D041BE018D16F51D8 /* PBXTargetDependency */,
+			);
+			name = DynamicIslandToastTests;
+			packageProductDependencies = (
+				3287B3C42CAA7EAE462F7C1A /* DynamicIslandToast */,
+			);
+			productName = DynamicIslandToastTests;
+			productReference = D6E89E15680263DAF5399F8D /* DynamicIslandToastTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -125,11 +190,21 @@
 			projectRoot = "";
 			targets = (
 				1DC7BB0FCD07E5C1229AD283 /* DynamicIslandToastExample */,
+				D7ED4685BD08F9D69A4F48E2 /* DynamicIslandToastTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AAE9717A5E95EA7EB58A8536 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F2E8859D763305D93C0C5AD /* DITThrowingCornerRadiusFixture.m in Sources */,
+				3D4CE577A41A4FA6C7016674 /* DynamicIslandToastTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F1A0185A14A195385C431795 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -144,7 +219,67 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		25EE0A3D041BE018D16F51D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1DC7BB0FCD07E5C1229AD283 /* DynamicIslandToastExample */;
+			targetProxy = BBF9238A2199B5FFCDFE8AAF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		04563A1B9F892719CAABB7D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../Tests/DynamicIslandToastObjCTestSupport/include",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = (
+					"$(inherited)",
+					"-Xcc",
+					"-fmodule-map-file=$(SRCROOT)/TestSupport.modulemap",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dynamicislandtoast.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DynamicIslandToastExample.app/DynamicIslandToastExample";
+			};
+			name = Release;
+		};
+		07BC4FB95339791F955CFC6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../Tests/DynamicIslandToastObjCTestSupport/include",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = (
+					"$(inherited)",
+					"-Xcc",
+					"-fmodule-map-file=$(SRCROOT)/TestSupport.modulemap",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dynamicislandtoast.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DynamicIslandToastExample.app/DynamicIslandToastExample";
+			};
+			name = Debug;
+		};
 		1E772F8048FE3504745FBE52 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -318,6 +453,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		4FF327A6A3AD63B791798C54 /* Build configuration list for PBXNativeTarget "DynamicIslandToastTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07BC4FB95339791F955CFC6E /* Debug */,
+				04563A1B9F892719CAABB7D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		7C109B46C6E4804FC363545D /* Build configuration list for PBXNativeTarget "DynamicIslandToastExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -337,6 +481,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3287B3C42CAA7EAE462F7C1A /* DynamicIslandToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DynamicIslandToast;
+		};
 		34B53C72434455D81DB50C08 /* DynamicIslandToast */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DynamicIslandToast;

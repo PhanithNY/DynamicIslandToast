@@ -12,14 +12,20 @@ extension UIViewController {
   public final func presentDynamicIsland(_ viewControllerToPresent: UIViewController,
                                          dismissAfterDelayed duration: TimeInterval?,
                                          completion: (() -> Void)? = nil) {
+    guard presentedViewController == nil, !isBeingPresented, !isBeingDismissed,
+          viewControllerToPresent.presentingViewController == nil,
+          !viewControllerToPresent.isBeingPresented, !viewControllerToPresent.isBeingDismissed else { return }
+    let state = DynamicIslandPresentationState.state(for: viewControllerToPresent)
+    let generation = state.begin()
     viewControllerToPresent.transitioningDelegate = DynamicIslandSize.delegate
-    present(viewControllerToPresent, animated: true) {
+    present(viewControllerToPresent, animated: true) { [weak viewControllerToPresent] in
       completion?()
-      
-      if let duration {
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-          viewControllerToPresent.dismiss(animated: true)
-        }
+      guard let viewControllerToPresent, viewControllerToPresent.presentingViewController != nil,
+            let duration else { return }
+      state.schedule(after: duration, generation: generation) { [weak viewControllerToPresent] in
+        guard let controller = viewControllerToPresent, controller.presentingViewController != nil,
+              !controller.isBeingDismissed else { return }
+        controller.dismiss(animated: true)
       }
     }
   }

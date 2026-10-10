@@ -83,6 +83,11 @@ final class ExamplesViewController: UITableViewController {
           !isBeingDismissed else { return }
 
     let toast = ToastViewController(example: ToastExample.allCases[indexPath.row])
+    let navigation = navigationController as? ExampleNavigationController
+    navigation?.isToastVisible = true
+    toast.onDismiss = { [weak navigation] in
+      navigation?.isToastVisible = false
+    }
     presentDynamicIsland(toast, dismissAfterDelayed: dismissDelay)
   }
 }
