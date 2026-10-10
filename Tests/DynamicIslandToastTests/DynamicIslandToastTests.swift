@@ -114,7 +114,7 @@ final class DynamicIslandToastTests: XCTestCase {
     let fixture = CornerRadiusFixture()
     for radius: CGFloat in [0, 37, 62.5] {
       fixture.radius = radius
-      XCTAssertEqual(DITPrivateCornerRadiusReader.displayCornerRadius(for: fixture)?.doubleValue, Double(radius))
+      XCTAssertEqual(DynamicIslandToastPrivateCornerRadiusReader.displayCornerRadius(for: fixture)?.doubleValue, Double(radius))
     }
   }
 
@@ -122,23 +122,23 @@ final class DynamicIslandToastTests: XCTestCase {
     let fixture = CornerRadiusFixture()
     for radius: CGFloat in [-1, .nan, .infinity, -.infinity] {
       fixture.radius = radius
-      XCTAssertNil(DITPrivateCornerRadiusReader.displayCornerRadius(for: fixture))
+      XCTAssertNil(DynamicIslandToastPrivateCornerRadiusReader.displayCornerRadius(for: fixture))
     }
   }
 
   func testCornerRadiusReaderHandlesUnavailableGetter() {
-    XCTAssertNil(DITPrivateCornerRadiusReader.displayCornerRadius(for: NSObject()))
+    XCTAssertNil(DynamicIslandToastPrivateCornerRadiusReader.displayCornerRadius(for: NSObject()))
   }
 
   func testCornerRadiusReaderCatchesObjectiveCExceptions() {
-    XCTAssertNil(DITPrivateCornerRadiusReader.displayCornerRadius(for: DITThrowingCornerRadiusFixture()))
+    XCTAssertNil(DynamicIslandToastPrivateCornerRadiusReader.displayCornerRadius(for: DITThrowingCornerRadiusFixture()))
   }
 
   func testCornerRadiusReaderRejectsIncompatibleReturnTypesWithoutCallingThem() {
     let objectFixture = ObjectCornerRadiusFixture()
     let integerFixture = IntegerCornerRadiusFixture()
-    XCTAssertNil(DITPrivateCornerRadiusReader.displayCornerRadius(for: objectFixture))
-    XCTAssertNil(DITPrivateCornerRadiusReader.displayCornerRadius(for: integerFixture))
+    XCTAssertNil(DynamicIslandToastPrivateCornerRadiusReader.displayCornerRadius(for: objectFixture))
+    XCTAssertNil(DynamicIslandToastPrivateCornerRadiusReader.displayCornerRadius(for: integerFixture))
     XCTAssertFalse(objectFixture.wasCalled)
     XCTAssertFalse(integerFixture.wasCalled)
   }
@@ -154,7 +154,7 @@ final class DynamicIslandToastTests: XCTestCase {
     XCTAssertTrue(class_addMethod(fixtureClass, NSSelectorFromString("_displayCornerRadius"), implementation, returnType + "@:@"))
     objc_registerClassPair(fixtureClass)
     let fixture = try XCTUnwrap(class_createInstance(fixtureClass, 0) as? NSObject)
-    XCTAssertNil(DITPrivateCornerRadiusReader.displayCornerRadius(for: fixture))
+    XCTAssertNil(DynamicIslandToastPrivateCornerRadiusReader.displayCornerRadius(for: fixture))
   }
 
   func testFailedCornerRadiusReadsUseSafeFallback() {

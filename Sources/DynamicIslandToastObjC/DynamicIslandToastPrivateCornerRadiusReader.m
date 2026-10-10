@@ -1,11 +1,11 @@
-#import "DITPrivateCornerRadiusReader.h"
+#import "DynamicIslandToastPrivateCornerRadiusReader.h"
 
 #import <CoreGraphics/CoreGraphics.h>
 #import <objc/runtime.h>
 #include <math.h>
 #include <string.h>
 
-@implementation DITPrivateCornerRadiusReader
+@implementation DynamicIslandToastPrivateCornerRadiusReader
 
 + (NSNumber *)displayCornerRadiusForObject:(NSObject *)object {
   @try {

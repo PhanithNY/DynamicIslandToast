@@ -96,7 +96,7 @@ public enum DynamicIslandSize {
 
   private static func radius(for screen: UIScreen?) -> CGFloat {
     guard radiusOverride == nil, let screen else { return radius(forDisplayCornerRadius: nil) }
-    let displayCornerRadius = DITPrivateCornerRadiusReader.displayCornerRadius(for: screen)
+    let displayCornerRadius = DynamicIslandToastPrivateCornerRadiusReader.displayCornerRadius(for: screen)
       .map { CGFloat(truncating: $0) }
     return radius(forDisplayCornerRadius: displayCornerRadius)
   }
