@@ -22,8 +22,8 @@ public enum DynamicIslandSize {
   }
   
   public static var originY: CGFloat = {
-    var originY: CGFloat = 11
-    
+    let originY: CGFloat
+
     let device = Device.current
     switch device {
     case .simulator(.iPhone16ProMax),
@@ -37,18 +37,22 @@ public enum DynamicIslandSize {
         .iPhone18Pro,
         .iPhone18ProMax:
       originY = 14.0
-      
+
+    case .simulator(.iPhoneAir),
+        .iPhoneAir:
+      originY = 20
+
     default:
-      // This is iPhone Air, hopefully.
-      if window.safeAreaInsets.top == 68 && window.bounds.width * window.bounds.height == 420*912 {
-        originY = 20
-      }
+      originY = 11
     }
     
     return originY
   }()
   
   public static var startFrame: CGRect = {
+    // The first dynamic island width is 20.76mm -> 126.0
+    // iPhone 18 series dynamic island width is 13.49 mm
+    let defaultIslandWidth: CGFloat = 126.0
     let islandWidth: CGFloat
     let islandHeight: CGFloat = 37
     
@@ -58,15 +62,14 @@ public enum DynamicIslandSize {
         .simulator(.iPhone18ProMax),
         .iPhone18Pro,
         .iPhone18ProMax:
-      islandWidth = 124
-      
+      islandWidth = defaultIslandWidth * (13.49 / 20.76)
+
     default:
-      islandWidth = 126
+      islandWidth = defaultIslandWidth
     }
     
-    let x: CGFloat = min(window.bounds.width, window.bounds.height)/2 - 126/2
-    
-    let startFrame = CGRect(x: x, y: originY, width: islandWidth, height: islandHeight)
+    let originX: CGFloat = min(window.bounds.width, window.bounds.height)/2 - islandWidth/2
+    let startFrame = CGRect(x: originX, y: originY, width: islandWidth, height: islandHeight)
     return startFrame
   }()
   
@@ -102,15 +105,11 @@ extension UIScreen {
 
 extension UIApplication {
   var _currentWindow: UIWindow? {
-    if #available(iOS 13.0, *) {
-      return connectedScenes
-        .filter({$0.activationState == .foregroundActive})
-        .map({$0 as? UIWindowScene})
-        .compactMap({$0})
-        .first?.windows
-        .filter({$0.isKeyWindow}).first
-    } else {
-      return keyWindow
-    }
+    connectedScenes
+      .filter({$0.activationState == .foregroundActive})
+      .map({$0 as? UIWindowScene})
+      .compactMap({$0})
+      .first?.windows
+      .filter({$0.isKeyWindow}).first
   }
 }

@@ -1,0 +1,44 @@
+name: DynamicIslandToastExample
+options:
+  minimumXcodeGenVersion: 2.38.0
+  deploymentTarget:
+    iOS: "17.0"
+packages:
+  DynamicIslandToast:
+    path: ..
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+targets:
+  DynamicIslandToastExample:
+    type: application
+    platform: iOS
+    sources:
+      - DynamicIslandToastExample
+    dependencies:
+      - package: DynamicIslandToast
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dynamicislandtoast.example
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Toast Example
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+    info:
+      path: DynamicIslandToastExample/Info.plist
+      properties:
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default Configuration
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+schemes:
+  DynamicIslandToastExample:
+    build:
+      targets:
+        DynamicIslandToastExample: all
+    run:
+      config: Debug

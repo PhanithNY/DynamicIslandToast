@@ -1,0 +1,347 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3091AE87BCD32C94E61E786E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5989B6E87E0832B0A502F1A /* AppDelegate.swift */; };
+		600DA4ADE66FA637B2FCF643 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBC8AFD714974660205CA4C /* SceneDelegate.swift */; };
+		94EF41205C8096FAF6213470 /* DynamicIslandToast in Frameworks */ = {isa = PBXBuildFile; productRef = 34B53C72434455D81DB50C08 /* DynamicIslandToast */; };
+		C9057E230C6D0CF98E08F426 /* ToastExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA69F23661B8703FB5B1B82 /* ToastExample.swift */; };
+		E35CB0210767E6007C69607F /* ExamplesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857ECEBFCD2E2D0B970DE4DE /* ExamplesViewController.swift */; };
+		F988B062FB076107D39BA19E /* ToastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F672CB746D55B7D4284673 /* ToastViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		06F672CB746D55B7D4284673 /* ToastViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewController.swift; sourceTree = "<group>"; };
+		233C249F35924D0416665C94 /* DynamicIslandToastExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DynamicIslandToastExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FA69F23661B8703FB5B1B82 /* ToastExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastExample.swift; sourceTree = "<group>"; };
+		75CBC45F3A4D5B84DFEE728B /* DynamicIslandToast */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DynamicIslandToast; path = ..; sourceTree = SOURCE_ROOT; };
+		79F56836B66E48F558C85E43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		857ECEBFCD2E2D0B970DE4DE /* ExamplesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplesViewController.swift; sourceTree = "<group>"; };
+		9CBC8AFD714974660205CA4C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		D5989B6E87E0832B0A502F1A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6F368134ED7FF26B238F43CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				94EF41205C8096FAF6213470 /* DynamicIslandToast in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0C1FB5DD77CA1EDF96DF60B8 /* DynamicIslandToastExample */ = {
+			isa = PBXGroup;
+			children = (
+				D5989B6E87E0832B0A502F1A /* AppDelegate.swift */,
+				857ECEBFCD2E2D0B970DE4DE /* ExamplesViewController.swift */,
+				79F56836B66E48F558C85E43 /* Info.plist */,
+				9CBC8AFD714974660205CA4C /* SceneDelegate.swift */,
+				2FA69F23661B8703FB5B1B82 /* ToastExample.swift */,
+				06F672CB746D55B7D4284673 /* ToastViewController.swift */,
+			);
+			path = DynamicIslandToastExample;
+			sourceTree = "<group>";
+		};
+		4050B21E9A67B435279F53C8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				233C249F35924D0416665C94 /* DynamicIslandToastExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AAA16B264BD416FCE3B63B5D /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				75CBC45F3A4D5B84DFEE728B /* DynamicIslandToast */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		BA1D3F00A36FE945F230DD00 = {
+			isa = PBXGroup;
+			children = (
+				0C1FB5DD77CA1EDF96DF60B8 /* DynamicIslandToastExample */,
+				AAA16B264BD416FCE3B63B5D /* Packages */,
+				4050B21E9A67B435279F53C8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1DC7BB0FCD07E5C1229AD283 /* DynamicIslandToastExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C109B46C6E4804FC363545D /* Build configuration list for PBXNativeTarget "DynamicIslandToastExample" */;
+			buildPhases = (
+				F1A0185A14A195385C431795 /* Sources */,
+				6F368134ED7FF26B238F43CF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DynamicIslandToastExample;
+			packageProductDependencies = (
+				34B53C72434455D81DB50C08 /* DynamicIslandToast */,
+			);
+			productName = DynamicIslandToastExample;
+			productReference = 233C249F35924D0416665C94 /* DynamicIslandToastExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1B8AC9D42E064F8BFC0DF85C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = 0FD21918A1578E79A84AF83B /* Build configuration list for PBXProject "DynamicIslandToastExample" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = BA1D3F00A36FE945F230DD00;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6EB862A0B48E9B204AA8AAEA /* XCLocalSwiftPackageReference ".." */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1DC7BB0FCD07E5C1229AD283 /* DynamicIslandToastExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F1A0185A14A195385C431795 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3091AE87BCD32C94E61E786E /* AppDelegate.swift in Sources */,
+				E35CB0210767E6007C69607F /* ExamplesViewController.swift in Sources */,
+				600DA4ADE66FA637B2FCF643 /* SceneDelegate.swift in Sources */,
+				C9057E230C6D0CF98E08F426 /* ToastExample.swift in Sources */,
+				F988B062FB076107D39BA19E /* ToastViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1E772F8048FE3504745FBE52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		640A52505B36711A7BB58BBD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A545D5F61FACBC92723EFA68 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DynamicIslandToastExample/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Toast Example";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dynamicislandtoast.example;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		BF0FC86D66388B3CDD32CDBD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DynamicIslandToastExample/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Toast Example";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dynamicislandtoast.example;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0FD21918A1578E79A84AF83B /* Build configuration list for PBXProject "DynamicIslandToastExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E772F8048FE3504745FBE52 /* Debug */,
+				640A52505B36711A7BB58BBD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7C109B46C6E4804FC363545D /* Build configuration list for PBXNativeTarget "DynamicIslandToastExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A545D5F61FACBC92723EFA68 /* Debug */,
+				BF0FC86D66388B3CDD32CDBD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		6EB862A0B48E9B204AA8AAEA /* XCLocalSwiftPackageReference ".." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		34B53C72434455D81DB50C08 /* DynamicIslandToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DynamicIslandToast;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1B8AC9D42E064F8BFC0DF85C /* Project object */;
+}
