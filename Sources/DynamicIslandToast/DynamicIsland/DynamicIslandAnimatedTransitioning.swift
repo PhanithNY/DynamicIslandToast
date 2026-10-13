@@ -56,15 +56,22 @@ final class DynamicIslandAnimatedTransitioning: NSObject, UIViewControllerAnimat
     view.layer.cornerCurve = .continuous
     view.layoutIfNeeded()
     messages.forEach { $0.prepareContentTransition() }
-    let image = DynamicIslandContentSnapshot.image(of: view, icons: messages.map { $0.transitionIconView })
+    let snapshot = DynamicIslandContentSnapshot.layers(
+      of: view,
+      iconContainers: messages.map { $0.transitionIconContainerView },
+      icons: messages.map { $0.transitionIconView }
+    )
+    let image = snapshot.content
     let reducedMotion = UIAccessibility.isReduceMotionEnabled
     let surface = DynamicIslandTransitionView(
       image: image,
+      iconImage: snapshot.icons,
       expandedFrame: expandedFrame,
       collapsedFrame: DynamicIslandSize.startFrame(in: container.bounds),
       cornerRadius: DynamicIslandSize.radius(for: view),
       backgroundColor: view.backgroundColor ?? .black,
-      reducedMotion: reducedMotion
+      reducedMotion: reducedMotion,
+      shadowLayer: view.layer
     )
     surface.frame = container.bounds
     surface.bounds = container.bounds
@@ -86,14 +93,16 @@ final class DynamicIslandAnimatedTransitioning: NSObject, UIViewControllerAnimat
         self.clock?.cancel()
       }
       UIView.performWithoutAnimation {
-        messages.forEach {
-          $0.finishContentTransition(isPresenting: isPresenting, isCancelled: cancelled)
-        }
         view.alpha = originalAlpha
         surface.finish()
         if isPresenting && cancelled {
           view.removeFromSuperview()
         }
+      }
+      // Start queued SF Symbol effects only after the live view is visible,
+      // outside the block that suppresses animations during snapshot cleanup.
+      messages.forEach {
+        $0.finishContentTransition(isPresenting: isPresenting, isCancelled: cancelled)
       }
       self.blurRequest?.cancel()
       self.blurRequest = nil

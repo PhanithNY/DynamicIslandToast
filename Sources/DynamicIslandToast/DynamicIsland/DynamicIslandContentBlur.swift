@@ -11,8 +11,8 @@ enum DynamicIslandContentBlur {
     let source: UIImage
     let images: [UIImage]
 
-    // Compare actual pixels on the worker, so updated text, tint, symbols or
-    // geometry invalidate the presentation's cache before dismissal.
+    // Compare actual content pixels on the worker before reusing the blur.
+    // Leading icons are captured separately and remain sharp.
     func matches(_ image: UIImage) -> Bool {
       guard source.scale == image.scale, source.imageOrientation == image.imageOrientation,
             let lhs = source.cgImage, let rhs = image.cgImage,

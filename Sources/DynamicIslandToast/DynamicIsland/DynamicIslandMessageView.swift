@@ -19,6 +19,8 @@ public final class DynamicIslandMessageView: UIView {
   private var messageFont: UIFont
   private var titleLabelHeightConstraint: NSLayoutConstraint?
   private var messageLabelHeightConstraint: NSLayoutConstraint?
+  private var titleTrailingConstraint: NSLayoutConstraint?
+  private var messageBottomConstraint: NSLayoutConstraint?
   private var isContentTransitionActive = false
   private var contentAlphaBeforeTransition: CGFloat = 0
   private var pendingIconEffect: (() -> Void)?
@@ -27,15 +29,18 @@ public final class DynamicIslandMessageView: UIView {
   private var iconSizeConstraints: [NSLayoutConstraint] = []
   private let iconInset: CGFloat = 18
   
-  private lazy var iconContainerView = UIView().config {
+  private lazy var iconContainerView = DynamicIslandIconContainerView().config {
     $0.backgroundColor = .clear
     $0.layer.masksToBounds = true
   }
   
-  private lazy var iconView = UIImageView().config {
+  private lazy var iconView = DynamicIslandIconView().config {
     $0.image = UIImage(systemName: "info")?.applyingSymbolConfiguration(.init(font: UIFont.systemFont(ofSize: 32, weight: .semibold)))
     $0.contentMode = .center
     $0.tintColor = .white
+    $0.clipsToBounds = true
+    $0.isOpaque = false
+    $0.backgroundColor = .clear
   }
 
   private lazy var titleLabel = UILabel().config {
@@ -62,6 +67,12 @@ public final class DynamicIslandMessageView: UIView {
     super.init(frame: frame)
     
     prepareLayouts()
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(originYDidChange(_:)),
+      name: DynamicIslandSize.originYDidChangeNotification,
+      object: nil
+    )
   }
   
   required init?(coder: NSCoder) {
@@ -69,25 +80,24 @@ public final class DynamicIslandMessageView: UIView {
   }
 
   deinit {
+    NotificationCenter.default.removeObserver(self)
     scheduledIconEffect?.cancel()
   }
   
   public override func didMoveToWindow() {
     super.didMoveToWindow()
-    updateIconGeometry()
+    updateGeometry()
   }
 
   public override func layoutSubviews() {
-    updateIconGeometry()
+    updateGeometry()
     super.layoutSubviews()
-    
-    iconContainerView.layer.cornerRadius = iconContainerView.bounds.height / 2.0
-    iconView.layer.cornerRadius = iconView.bounds.height / 2.0
   }
   
   // MARK: - Actions
 
   var transitionIconView: UIImageView { iconView }
+  var transitionIconContainerView: UIView { iconContainerView }
   
   public final func setAlphaForSubviews(to alpha: CGFloat) {
     // The transition renders fully visible content into its own surface and
@@ -108,7 +118,9 @@ public final class DynamicIslandMessageView: UIView {
   func finishContentTransition(isPresenting: Bool, isCancelled: Bool) {
     guard isContentTransitionActive else { return }
     isContentTransitionActive = false
-    applyContentAlpha(isCancelled ? contentAlphaBeforeTransition : (isPresenting ? 1 : 0))
+    UIView.performWithoutAnimation {
+      applyContentAlpha(isCancelled ? contentAlphaBeforeTransition : (isPresenting ? 1 : 0))
+    }
     let effect = pendingIconEffect
     pendingIconEffect = nil
     if isPresenting || isCancelled {
@@ -199,7 +211,7 @@ public final class DynamicIslandMessageView: UIView {
       }
     }
   }
-  
+
   // MARK: - Prepare layouts
   
   private func prepareLayouts() {
@@ -236,7 +248,8 @@ public final class DynamicIslandMessageView: UIView {
     titleLabel.translatesAutoresizingMaskIntoConstraints = false
     addSubview(titleLabel)
     titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: inset-4).isActive = true
-    titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -DynamicIslandSize.originY).isActive = true
+    titleTrailingConstraint = titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -DynamicIslandSize.originY)
+    titleTrailingConstraint?.isActive = true
     titleLabelHeightConstraint = titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: titleLabel.font.lineHeight + 3)
     titleLabelHeightConstraint?.isActive = true
     
@@ -259,16 +272,26 @@ public final class DynamicIslandMessageView: UIView {
     // This still participates in fitting the expanded height (priority 50).
     bottomConstraint.priority = UILayoutPriority(999)
     bottomConstraint.isActive = true
+    messageBottomConstraint = bottomConstraint
     
     registerForTraitChanges([UITraitDisplayScale.self]) { (view: DynamicIslandMessageView, _) in
-      view.updateIconGeometry()
+      view.updateGeometry()
     }
     setAlphaForSubviews(to: 0.0)
   }
 
-  private func updateIconGeometry() {
+  @objc private func originYDidChange(_ notification: Notification) {
+    updateGeometry()
+  }
+
+  private func updateGeometry() {
+    let padding = -DynamicIslandSize.originY
     let size = max(0, (DynamicIslandSize.radius(for: self) - iconInset) * 2)
-    guard iconSizeConstraints.contains(where: { $0.constant != size }) else { return }
+    guard titleTrailingConstraint?.constant != padding
+      || messageBottomConstraint?.constant != padding
+      || iconSizeConstraints.contains(where: { $0.constant != size }) else { return }
+    titleTrailingConstraint?.constant = padding
+    messageBottomConstraint?.constant = padding
     iconSizeConstraints.forEach { $0.constant = size }
     invalidateIntrinsicContentSize()
     setNeedsLayout()
@@ -284,5 +307,28 @@ public final class DynamicIslandMessageView: UIView {
     paragraphStyle.lineBreakMode = .byWordWrapping
     attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
     messageLabel.attributedText = attributedText
+  }
+}
+
+@available(iOS 17.0, *)
+private final class DynamicIslandIconContainerView: UIView {
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    // Auto Layout can resize the badge after its parent's layout callback.
+    layer.cornerRadius = min(bounds.width, bounds.height) / 2
+  }
+}
+
+/// SF Symbol alignment insets describe the glyph, not the circular image surface.
+/// Keep Auto Layout's alignment rectangle equal to the badge's actual bounds.
+@available(iOS 17.0, *)
+private final class DynamicIslandIconView: UIImageView {
+  override var alignmentRectInsets: UIEdgeInsets { .zero }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    // The badge lays out its image after the message view's layout callback.
+    // Update the radius here, when the image's final bounds are available.
+    layer.cornerRadius = min(bounds.width, bounds.height) / 2
   }
 }

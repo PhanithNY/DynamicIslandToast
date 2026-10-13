@@ -13,6 +13,7 @@ import UIKit
 public enum DynamicIslandSize {
   
   static let delegate = DynamicIslandTransitioningDelegate()
+  static let originYDidChangeNotification = Notification.Name("DynamicIslandToast.originYDidChange")
   
   public static var originY: CGFloat = {
     let originY: CGFloat
@@ -40,7 +41,12 @@ public enum DynamicIslandSize {
     }
     
     return originY
-  }()
+  }() {
+    didSet {
+      guard originY != oldValue else { return }
+      NotificationCenter.default.post(name: originYDidChangeNotification, object: nil)
+    }
+  }
   
   // Explicit overrides remain shared configuration; default geometry is
   // calculated for the current presentation instead of cached from a window.

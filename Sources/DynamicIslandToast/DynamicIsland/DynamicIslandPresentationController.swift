@@ -139,6 +139,6 @@ final class DynamicIslandPresentationController: UIPresentationController, UIGes
           !presentedViewController.isBeingPresented,
           !presentedViewController.isBeingDismissed else { return }
     isDismissalRequested = true
-    presentedViewController.dismiss(animated: true)
+    presentedViewController.dismissDynamicIslandPresentation(animated: true)
   }
 }
